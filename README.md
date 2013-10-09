@@ -53,8 +53,6 @@ This feature makes it possible to react on reaching either to bottom o the right
 
 ## Other notes
 
-LionBars is a relatively new plugin and has been recently fully rewritten. The basic functionality is there and working, other extras like light and dark styles, etc. are going to be added soon. 
-
 Thank you for your interest LionBars!
 
 If you wish to contribute, make sure you contact me at me@nikolaydyankov.com
