@@ -59,6 +59,7 @@ If you wish to contribute, make sure you contact me at me@nikolaydyankov.com
 
 #### Developers
 <a hfre="http://walody.com">Vladimir Shafikov</a>
+
 Author of original jQuery plugin <a href="http://www.nikolaydyankov.com">Nikolay Dyankov</a>
 
 #### Thanks to
