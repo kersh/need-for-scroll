@@ -1,12 +1,8 @@
-# LionBars
+# Need For Scroll
 
-LionBars is a jQuery plugin that styles default scrollbars to look and behave like in OSX Lion.
-Please check out the demo at http://charuru.github.com/lionbars/
+Need For Scroll is a JavaScript framework that makes scrollbars behave and look similar to MacOSX Lion/Facebook.
+Also, this is a fork of LionBars repo (https://github.com/Charuru/lionbars).
 
-1. Main features
-2. How to use
-3. Options
-4. Other things to note
 
 ## Main features
 
@@ -64,7 +60,8 @@ Thank you for your interest LionBars!
 If you wish to contribute, make sure you contact me at me@nikolaydyankov.com
 
 #### Developers
-<a href="http://www.nikolaydyankov.com">Nikolay Dyankov</a>
+<a hfre="http://walody.com">Vladimir Shafikov</a>
+Author of original jQuery plugin <a href="http://www.nikolaydyankov.com">Nikolay Dyankov</a>
 
 #### Thanks to
 <a href="http://github.com/kersten">Kersten Burkhardt</a> For implementing endless scroll
