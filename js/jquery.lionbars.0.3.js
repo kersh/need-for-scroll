@@ -464,6 +464,11 @@
 			paddingLeft = parseInt(el.css('padding-left').replace('px', ''));
 			paddingBottom = parseInt(el.css('padding-bottom').replace('px', ''));
 			paddingRight = parseInt(el.css('padding-right').replace('px', ''));
+
+			console.log("paddingTop:", paddingTop,
+						"paddingLeft:", paddingLeft,
+						"paddingBottom:", paddingBottom,
+						"paddingRight:", paddingRight);
 		}
 		function getBorders(elem) {
 			var el = $(elem);
