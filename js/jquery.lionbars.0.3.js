@@ -1,36 +1,92 @@
 (function($) {
     $.fn.hasScrollBar = function() {
+    	console.log("$.fn.hasScrollBar");
         return this.get(0).scrollHeight > this.height();
     };
+
     $.fn.lionbars = function(options) {
         options = options || {};
         autohide = options.autohide;
+        
         // Flags
-        var timeout,HDragging=false,VDragging=false,activeScroll=0,activeWrap=0,eventX,eventY,mouseX,mouseY,
-        currentRatio,initPos,scrollValue,hideTimeoutSet=false,vEventFired = false,hEventFired = false;
+        var timeout,
+        	HDragging=false,
+        	VDragging=false,
+        	activeScroll=0,
+        	activeWrap=0,
+        	eventX,
+        	eventY,
+        	mouseX,
+        	mouseY,
+        	currentRatio,
+        	initPos,
+        	scrollValue,
+        	hideTimeoutSet=false,
+        	vEventFired = false,
+        	hEventFired = false;
+		
 		// Initialization
-		var elements = $(this),id = 0,vScrollWidth=0, hScrollWidth=0,addHScroll=false, addVScroll=false,paddingTop=0, paddingLeft=0, paddingBottom=0, paddingRight=0,
-		borderTop=0, borderRight=0, borderBottom=0, borderLeft=0,scrollHeight=0, scrollWidth=0, offsetWidth=0, offsetHeight=0, clientWidth=0, clientHeight=0,vRatio=0, hRatio=0,
-		vSliderHeight=0, hSliderHeight=0,vLbHeight=0, hLbHeight=0;
+		var elements = $(this),
+			id = 0,
+			vScrollWidth=0,
+			hScrollWidth=0,
+			addHScroll=false,
+			addVScroll=false,
+			paddingTop=0,
+			paddingLeft=0,
+			paddingBottom=0,
+			paddingRight=0,
+			borderTop=0,
+			borderRight=0,
+			borderBottom=0,
+			borderLeft=0,
+			scrollHeight=0,
+			scrollWidth=0,
+			offsetWidth=0,
+			offsetHeight=0,
+			clientWidth=0,
+			clientHeight=0,
+			vRatio=0,
+			hRatio=0,
+			vSliderHeight=0,
+			hSliderHeight=0,
+			vLbHeight=0,
+			hLbHeight=0;
+
 		// Main Loop
         this.mainLoop = function() {
+        	// console.log("within mainLoop");
+        	// console.log("elements:", elements);
+
             for(var i=0; elements[i] !== undefined; i++) {
+            	// console.log("within for loop in mainLoop");
                 if(needScrollbars(elements[i]) && !$(elements[i]).hasClass('nolionbars')) {
+                	// console.log("within for loop if(needScrollbars)");
+                    
+
                     // add the element to the main array
                     target = elements[i];
+                    // console.log("target:", target);
+					
 					// get some values before the element is wrapped
 					getDimentions(target);
+					
 					// wrap the element
 					wrap(target, addVScroll, addHScroll);
+					
 					// hide the default scrollbar
 					hideScrollbars(target, addVScroll, addHScroll);
+					
 					// Calculate the size of the scrollbars
 					reduceScrollbarsWidthHeight(target);
 					setSlidersHeight(target);
+					
 					// Set variables needed to calculate scroll speed, etc.
 					setScrollRatios(target);
+					
 					// Set events
 					setEvents(target);
+					
 					// prepare for next element
 					resetVars();
 				}
@@ -39,6 +95,8 @@
 		this.mainLoop();
         
         this.Update = function() {
+        	console.log("within Update");
+
 			for(var i=0; elements[i] !== undefined; i++) {
 				if (needScrollbars(elements[i]) && !$(elements[i]).hasClass('nolionbars')) {
 					// add the element to the main array
@@ -360,11 +418,18 @@
 			id = id + 1;
 		}
 		function needScrollbars(elem) {
+			console.log("needScrollbars");
+
 			var el = $(elem);
+
 			addVScroll = false;
 			addHScroll = false;
 			
-			if (el.find('.lb-v-scrollbar-slider').length) return false;
+			if (el.find('.lb-v-scrollbar-slider').length) {
+				return false;
+			}
+			
+			console.log("el:", el);
 			
 			getPadding(el);
 			getBorders(el);
@@ -424,6 +489,7 @@
 		}
 		
 		return this.each(function() {
+			// console.log("return this.each");
 			var $this = $(this);
 		});
 	};
