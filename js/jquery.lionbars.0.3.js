@@ -424,7 +424,7 @@
 		}
 		
 		return this.each(function() {
-			//var $this = $(this);
+			var $this = $(this);
 		});
 	};
 })(jQuery);
