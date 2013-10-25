@@ -444,7 +444,7 @@
 				addVScroll = true;
 				// setVScrollbarWidth(el);
 			}
-			
+
 			// check for horizontal scrollbars
 			if (overflowX != 'hidden' && el.get(0).scrollWidth > el.get(0).clientWidth) {
 				addHScroll = true;
@@ -459,24 +459,33 @@
 		}
 		function getPadding(elem) {
 			var el = $(elem);
-			
+
 			paddingTop = parseInt(el.css('padding-top').replace('px', ''));
 			paddingLeft = parseInt(el.css('padding-left').replace('px', ''));
 			paddingBottom = parseInt(el.css('padding-bottom').replace('px', ''));
 			paddingRight = parseInt(el.css('padding-right').replace('px', ''));
 
-			console.log("paddingTop:", paddingTop,
-						"paddingLeft:", paddingLeft,
-						"paddingBottom:", paddingBottom,
-						"paddingRight:", paddingRight);
+			console.log("---getPadding---",
+						"\npaddingTop:", paddingTop,
+						"\npaddingLeft:", paddingLeft,
+						"\npaddingBottom:", paddingBottom,
+						"\npaddingRight:", paddingRight,
+						"\n---end getPadding---");
 		}
 		function getBorders(elem) {
 			var el = $(elem);
-			
+
 			borderTop = parseInt(el.css('border-top-width').replace('px', ''));
 			borderRight = parseInt(el.css('border-right-width').replace('px', ''));
 			borderBottom = parseInt(el.css('border-bottom-width').replace('px', ''));
 			borderLeft = parseInt(el.css('border-left-width').replace('px', ''));
+
+			console.log("---getBorders---",
+						"\nborderTop:", borderTop,
+						"\nborderRight:", borderRight,
+						"\nborderBottom:", borderBottom,
+						"\nborderLeft:", borderLeft,
+						"\n---end getBorders---");
 		}
 		function getDimentions(elem, scroll, update) {
 			var el = $(elem).get(0);
@@ -492,7 +501,7 @@
 			setVScrollbarWidth($(elem));
 			setHScrollbarWidth($(elem));
 		}
-		
+
 		return this.each(function() {
 			// console.log("return this.each");
 			var $this = $(this);
