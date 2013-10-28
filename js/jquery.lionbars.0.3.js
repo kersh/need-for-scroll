@@ -291,7 +291,7 @@
 		}
 		function setScrollRatios(elem) {
 			vRatio = (offsetHeight - $(elem).find('.lb-wrap').get(0).scrollHeight - borderTop - borderBottom)/(vLbHeight - vSliderHeight);
-			console.log("jvRatio:", vRatio);
+			// console.log("jvRatio:", vRatio);
 			hRatio = (offsetWidth - $(elem).find('.lb-wrap').get(0).scrollWidth - borderLeft - borderRight)/(hLbHeight - hSliderHeight);
 			
 			var el = $(elem);
@@ -393,6 +393,10 @@
 			var mainEl = $(main);
 			var childEl = $(child);
 			mainEl.css({ "position" : 'relative' });
+			
+			console.log("mainEl.width():", mainEl.width());
+			console.log("jWidth:", mainEl.width()+vScrollWidth - paddingLeft - paddingRight);
+
 			childEl.css({
 				"width" : mainEl.width()+vScrollWidth - paddingLeft - paddingRight, 
 				"height" : mainEl.height()+hScrollWidth - paddingTop - paddingBottom 

@@ -205,6 +205,7 @@
 
     function movePadding(from, to) {
         from.style.padding = 0;
+        console.log("paddingTop:", paddingTop);
         to.style.paddingTop    = paddingTop + "px";
         to.style.paddingRight  = paddingRight + "px";
         to.style.paddingBottom = paddingBottom + "px";
@@ -218,6 +219,11 @@
 
     function resizeInnerWrap(main, child) {
         main.style.position = "relative";
+        
+        console.log("main.width:", getCssProperty(main, "width"));
+        console.log("main.:", main);
+        console.log("myWidth:", parseInt(getCssProperty(main, "width").replace("px", ""))  + vScrollWidth - paddingLeft - paddingRight);
+        
         child.style.width   = parseInt(getCssProperty(main, "width").replace("px", ""))  + vScrollWidth - paddingLeft - paddingRight;
         child.style.height  = parseInt(getCssProperty(main, "height").replace("px", "")) + hScrollWidth - paddingTop  - paddingBottom;
     }
@@ -331,7 +337,7 @@
     function mainLoop() {
 
         if (needScrollbars(elements) && !hasClass(elements, "no-needforscroll")) {
-            console.log("inside if");
+            // console.log("inside if");
 
             // Get element from array
             target = elements;
@@ -358,7 +364,9 @@
     }
 
     function setEvents(elem) {
-        // body...
+        if (addVScroll || addHScroll) {
+
+        }
     }
 
 
