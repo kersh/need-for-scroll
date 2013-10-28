@@ -10,46 +10,62 @@
         
         // Flags
         var timeout,
+        	
         	HDragging=false,
         	VDragging=false,
+        	
         	activeScroll=0,
         	activeWrap=0,
+        	
         	eventX,
         	eventY,
+        	
         	mouseX,
         	mouseY,
+        	
         	currentRatio,
         	initPos,
         	scrollValue,
         	hideTimeoutSet=false,
+        	
         	vEventFired = false,
         	hEventFired = false;
 		
 		// Initialization
 		var elements = $(this),
 			id = 0,
+			
 			vScrollWidth=0,
 			hScrollWidth=0,
+			
 			addHScroll=false,
 			addVScroll=false,
+			
 			paddingTop=0,
 			paddingLeft=0,
 			paddingBottom=0,
 			paddingRight=0,
+			
 			borderTop=0,
 			borderRight=0,
 			borderBottom=0,
 			borderLeft=0,
+			
 			scrollHeight=0,
 			scrollWidth=0,
+			
 			offsetWidth=0,
 			offsetHeight=0,
+			
 			clientWidth=0,
 			clientHeight=0,
+			
 			vRatio=0,
 			hRatio=0,
+			
 			vSliderHeight=0,
 			hSliderHeight=0,
+			
 			vLbHeight=0,
 			hLbHeight=0;
 
@@ -62,7 +78,6 @@
             	// console.log("within for loop in mainLoop");
                 if(needScrollbars(elements[i]) && !$(elements[i]).hasClass('nolionbars')) {
                 	// console.log("within for loop if(needScrollbars)");
-                    
 
                     // add the element to the main array
                     target = elements[i];
@@ -276,6 +291,7 @@
 		}
 		function setScrollRatios(elem) {
 			vRatio = (offsetHeight - $(elem).find('.lb-wrap').get(0).scrollHeight - borderTop - borderBottom)/(vLbHeight - vSliderHeight);
+			console.log("jvRatio:", vRatio);
 			hRatio = (offsetWidth - $(elem).find('.lb-wrap').get(0).scrollWidth - borderLeft - borderRight)/(hLbHeight - hSliderHeight);
 			
 			var el = $(elem);
@@ -290,6 +306,7 @@
 				hmin = 20;
 				gap = offsetHeight - el.find('.lb-v-scrollbar').height();
 				hmax = offsetHeight - gap - hmin;
+
 				vSliderHeight = Math.round((offsetHeight*hmax)/scrollHeight);
 				vSliderHeight = (vSliderHeight < hmin) ? hmin : vSliderHeight;
 			}
@@ -357,7 +374,8 @@
 		}
 		function resizeMainBox(elem) {
 			var el = $(elem);
-			el.css({ "width" : el.width() + paddingLeft + paddingRight, "height" : el.height() + paddingTop + paddingBottom });
+			el.css({ "width" : el.width() + paddingLeft + paddingRight,
+					 "height" : el.height() + paddingTop + paddingBottom });
 		}
 		function movePadding(from, to) {
 			var fromEl = $(from);
@@ -395,6 +413,7 @@
 		function wrap(elem, vscroll, hscroll) {
 			var el = $(elem);
 			var elemId = el.attr('id');
+
 			var wrap = 0;
 			
 			if (elemId !== undefined) {
@@ -404,6 +423,7 @@
 				el.wrapInner('<div class="lb-wrap" id="lb-wrap-'+id+'"></div>');
 				wrap = $('#lb-wrap-'+id);
 			}
+
 			wrap.wrapInner('<div class="lb-content"></div>');
 			if (vscroll) {
 				el.prepend('<div class="lb-v-scrollbar"></div>');
@@ -418,7 +438,7 @@
 			id = id + 1;
 		}
 		function needScrollbars(elem) {
-			console.log("needScrollbars");
+			// console.log("needScrollbars");
 
 			var el = $(elem);
 
@@ -429,7 +449,7 @@
 				return false;
 			}
 			
-			console.log("el:", el);
+			// console.log("el:", el);
 			
 			getPadding(el);
 			getBorders(el);
@@ -438,7 +458,7 @@
 			var overflowX = el.css('overflow-x');
 			
 			el.css({ "overflow" : 'hidden' });
-			
+
 			// check for vertical scrollbars
 			if (overflowY != 'hidden' && el.get(0).scrollHeight > el.get(0).clientHeight) {
 				addVScroll = true;
@@ -461,16 +481,16 @@
 			var el = $(elem);
 
 			paddingTop = parseInt(el.css('padding-top').replace('px', ''));
-			paddingLeft = parseInt(el.css('padding-left').replace('px', ''));
-			paddingBottom = parseInt(el.css('padding-bottom').replace('px', ''));
 			paddingRight = parseInt(el.css('padding-right').replace('px', ''));
+			paddingBottom = parseInt(el.css('padding-bottom').replace('px', ''));
+			paddingLeft = parseInt(el.css('padding-left').replace('px', ''));
 
-			console.log("---getPadding---",
-						"\npaddingTop:", paddingTop,
-						"\npaddingLeft:", paddingLeft,
-						"\npaddingBottom:", paddingBottom,
-						"\npaddingRight:", paddingRight,
-						"\n---end getPadding---");
+			// console.log("---getPadding---",
+			// 			"\npaddingTop:", paddingTop,
+			// 			"\npaddingLeft:", paddingLeft,
+			// 			"\npaddingBottom:", paddingBottom,
+			// 			"\npaddingRight:", paddingRight,
+			// 			"\n---end getPadding---");
 		}
 		function getBorders(elem) {
 			var el = $(elem);
@@ -480,12 +500,12 @@
 			borderBottom = parseInt(el.css('border-bottom-width').replace('px', ''));
 			borderLeft = parseInt(el.css('border-left-width').replace('px', ''));
 
-			console.log("---getBorders---",
-						"\nborderTop:", borderTop,
-						"\nborderRight:", borderRight,
-						"\nborderBottom:", borderBottom,
-						"\nborderLeft:", borderLeft,
-						"\n---end getBorders---");
+			// console.log("---getBorders---",
+			// 			"\nborderTop:", borderTop,
+			// 			"\nborderRight:", borderRight,
+			// 			"\nborderBottom:", borderBottom,
+			// 			"\nborderLeft:", borderLeft,
+			// 			"\n---end getBorders---");
 		}
 		function getDimentions(elem, scroll, update) {
 			var el = $(elem).get(0);
@@ -493,7 +513,11 @@
 			 el = $(el).find('.lb-wrap').get(0);
 			}
 			scrollHeight = (typeof(scroll) != 'undefined' && scroll != false) ? scroll.height : el.scrollHeight;
+			// console.log("scrollHeight:", scrollHeight);
+
 			scrollWidth = (typeof(scroll) != 'undefined' && scroll != false) ? scroll.width : el.scrollWidth;
+			// console.log("scrollWidth:", scrollWidth);
+
 			clientHeight = el.clientHeight;
 			clientWidth = el.clientWidth;
 			offsetHeight = el.offsetHeight;
