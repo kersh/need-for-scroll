@@ -368,7 +368,6 @@
     function mainLoop() {
 
         if (needScrollbars(elements) && !hasClass(elements, "no-needforscroll")) {
-            // console.log("inside if");
 
             // Get element from array
             target = elements;
@@ -397,6 +396,34 @@
         }
     }
 
+    // Set default events
+    window.addEventListener("mousemove", function(e) {
+        if (HDragging || VDragging) {
+
+            if(VDragging) {
+                mouseY = e.pageY;
+                activeWrap.scrollTop = (initPos + mouseY - eventY) * Math.abs(currentRatio);
+            }
+            if(HDragging) {
+                mouseX = e.pageX;
+                activeWrap.scrollLeft = (initPos + mouseX - eventX) * Math.abs(currentRatio);
+            }
+        }
+    }, false);
+    // Set default events
+    window.addEventListener("mouseup", function(e) {
+        if (HDragging || VDragging) {
+
+            if (VDragging) {
+                VDragging = false;
+            }
+            if (HDragging) {
+                HDragging = false;
+            }
+        }
+    }, false);
+
+    // Core
     function setEvents(elem) {
         if (addVScroll || addHScroll) {
             elem.getElementsByClassName("lb-wrap")[0].addEventListener("scroll", function(e) {
@@ -418,7 +445,7 @@
             }, false);
 
             if (addVScroll) {
-                elem.getElementsByClassName("lb-v-scrollbar-slider")[0].addEventListener("mousedown", function(e){
+                elem.getElementsByClassName("lb-v-scrollbar-slider")[0].onmousedown = function(e){
                     eventY       = e.pageY;
                     VDragging    = true;
                     activeScroll = this;
@@ -427,19 +454,19 @@
                     currentRatio = activeWrap.parentNode.getAttribute("vratio");
                     initPos      = parseInt(getCssProperty(activeScroll, "top").replace("px", ""));
                     return false;
-                }, false);
+                }
 
-                elem.getElementsByClassName("lb-v-scrollbar")[0].addEventListener("mousedown", function(e){
+                elem.getElementsByClassName("lb-v-scrollbar")[0].onmousedown = function(e){
                     if (!hasClass(e.target, "lb-v-scrollbar-slider")) {
-                        // console.log("offset.top:", this.offsetTop);
-                        elem.getElementsByClassName("lb-wrap").scrollTop = ((e.pageY - this.offsetTop) * Math.abs(elem.getAttribute("vratio"))) - (parseInt(getCssProperty(this.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""))/2);
+                        var this_offset_top = this.getBoundingClientRect().top + window.pageYOffset;
+                        elem.getElementsByClassName("lb-wrap")[0].scrollTop = (e.pageY - this_offset_top) * Math.abs(elem.getAttribute("vratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""))/2;
                     }
                     return false;
-                }, false);
+                }
             }
 
             if (addHScroll) {
-                elem.getElementsByClassName("lb-h-scrollbar-slider")[0].addEventListener("mousedown", function(e){
+                elem.getElementsByClassName("lb-h-scrollbar-slider")[0].onmousedown = function(e){
                     eventX       = e.pageX;
                     HDragging    = true;
                     activeScroll = this;
@@ -448,43 +475,18 @@
                     currentRatio = activeWrap.parentNode.getAttribute("hratio");
                     initPos      = parseInt(getCssProperty(activeScroll, "left").replace("px", ""));
                     return false;
-                }, false);
+                }
 
-                elem.getElementsByClassName("lb-h-scrollbar")[0].addEventListener("mousedown", function(e){
+                elem.getElementsByClassName("lb-h-scrollbar")[0].onmousedown = function(e){
                     if (!hasClass(e.target, "lb-h-scrollbar-slider")) {
-                        elem.getElementsByClassName("lb-wrap").scrollLeft = ((e.pageX - this.offsetLeft) * Math.abs(elem.getAttribute("hratio"))) - (parseInt(getCssProperty(this.getElementsByClassName("lb-h-scrollbar-slider")[0], "height").replace("px", ""))/2);
+                        var this_offset_left = this.getBoundingClientRect().left + window.pageXOffset;
+                        elem.getElementsByClassName("lb-wrap")[0].scrollLeft = (e.pageX - this_offset_left) * Math.abs(elem.getAttribute("hratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-h-scrollbar-slider")[0], "width").replace("px", ""))/2;
                     }
                     return false;
-                }, false);
+                }
             }
         } // end both scrollbars
     }
-
-    window.addEventListener("mousemove", function(e) {
-        if (HDragging || VDragging) {
-            
-            if(VDragging) {
-                mouseY = e.pageY;
-                activeWrap.scrollTop = (initPos + mouseY - eventY) * Math.abs(currentRatio);
-            }
-            if(HDragging) {
-                mouseX = e.pageX;
-                activeWrap.scrollLeft = (initPos + mouseX - eventX) * Math.abs(currentRatio);
-            }
-        }
-    }, false);
-
-    window.addEventListener("mouseup", function(e) {
-        if (HDragging || VDragging) {
-
-            if(VDragging) {
-                VDragging = false;
-            }
-            if(HDragging) {
-                HDragging = false;
-            }
-        }
-    }, false);
 
 
     /*

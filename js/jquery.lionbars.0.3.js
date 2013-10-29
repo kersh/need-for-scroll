@@ -71,17 +71,11 @@
 
 		// Main Loop
         this.mainLoop = function() {
-        	// console.log("within mainLoop");
-        	// console.log("elements:", elements);
-
             for(var i=0; elements[i] !== undefined; i++) {
-            	// console.log("within for loop in mainLoop");
                 if(needScrollbars(elements[i]) && !$(elements[i]).hasClass('nolionbars')) {
-                	// console.log("within for loop if(needScrollbars)");
 
                     // add the element to the main array
                     target = elements[i];
-                    // console.log("target:", target);
 					
 					// get some values before the element is wrapped
 					getDimentions(target);
@@ -110,8 +104,6 @@
 		this.mainLoop();
         
         this.Update = function() {
-        	console.log("within Update");
-
 			for(var i=0; elements[i] !== undefined; i++) {
 				if (needScrollbars(elements[i]) && !$(elements[i]).hasClass('nolionbars')) {
 					// add the element to the main array
@@ -254,7 +246,8 @@
 				});
 				el.find('.lb-v-scrollbar').mousedown(function(e) {
 					if (!$(e.target).hasClass('lb-v-scrollbar-slider')) {
-						// console.log("j-offset.top:", $(this).offset().top);
+						console.log("j-offset.top:", $(this).offset().top);
+						// console.log("j-e.pageY:", e.pageY);
 						el.find('.lb-wrap').scrollTop((e.pageY - $(this).offset().top) * Math.abs(el.attr('vratio')) - $(this).find('.lb-v-scrollbar-slider').height()/2);
 					}
 					return false;
@@ -274,6 +267,7 @@
 				})
 				el.find('.lb-h-scrollbar').mousedown(function(e) {
 					if (!$(e.target).hasClass('lb-h-scrollbar-slider')) {
+						console.log("this.offset.left:", $(this).offset().left);
 						el.find('.lb-wrap').scrollLeft((e.pageX - $(this).offset().left) * Math.abs(el.attr('hratio')) - $(this).find('.lb-h-scrollbar-slider').width()/2);
 					}
 					return false;
