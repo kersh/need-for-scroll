@@ -154,7 +154,7 @@
 		// Set document events
 		$(document).mousemove(function(e) {
 			if (HDragging || VDragging) {
-				activeWrap.parent().find('.lb-v-scrollbar, .lb-h-scrollbar').show();
+				// activeWrap.parent().find('.lb-v-scrollbar, .lb-h-scrollbar').show();
 				if(VDragging) {
 					mouseY = e.pageY;
 					activeWrap.scrollTop((initPos + mouseY - eventY) * Math.abs(currentRatio));
@@ -167,7 +167,7 @@
 		});
 		$(document).mouseup(function(e) {
 			if (HDragging || VDragging) {
-				activeWrap.parent().find('.lb-v-scrollbar, .lb-h-scrollbar').fadeOut(150);
+				// activeWrap.parent().find('.lb-v-scrollbar, .lb-h-scrollbar').fadeOut(150);
 				if (VDragging) {
 					VDragging = false;
 				}
@@ -246,6 +246,7 @@
 					eventY = e.pageY;
 					VDragging = true;
 					activeScroll = $(this);
+
 					activeWrap = el.find('.lb-wrap');
 					currentRatio = activeWrap.parent().attr('vratio');
 					initPos = activeScroll.position().top;
@@ -253,6 +254,7 @@
 				});
 				el.find('.lb-v-scrollbar').mousedown(function(e) {
 					if (!$(e.target).hasClass('lb-v-scrollbar-slider')) {
+						// console.log("j-offset.top:", $(this).offset().top);
 						el.find('.lb-wrap').scrollTop((e.pageY - $(this).offset().top) * Math.abs(el.attr('vratio')) - $(this).find('.lb-v-scrollbar-slider').height()/2);
 					}
 					return false;
@@ -264,6 +266,7 @@
 					eventX = e.pageX;
 					HDragging = true;
 					activeScroll = $(this);
+					
 					activeWrap = el.find('.lb-wrap');
 					currentRatio = activeWrap.parent().attr('hratio');
 					initPos = activeScroll.position().left;
@@ -362,18 +365,24 @@
 				el.find('.lb-h-scrollbar').css({ "width" : hLbHeight });
 			}
 		}
+
+
 		function hideScrollbars(elem, vscroll, hscroll) {
 			var el = $(elem);
 			
 			if (vscroll || hscroll) {
 				el.css({ "overflow" : 'hidden' });
+
 				movePadding(el, el.find('.lb-wrap'));
+
 				resizeMainBox(el);
+
 				resizeInnerWrap(el, el.find('.lb-wrap'));
 			}
 		}
 		function resizeMainBox(elem) {
 			var el = $(elem);
+			// console.log("j-el.width():", el.width());
 			el.css({ "width" : el.width() + paddingLeft + paddingRight,
 					 "height" : el.height() + paddingTop + paddingBottom });
 		}
@@ -393,26 +402,29 @@
 			var mainEl = $(main);
 			var childEl = $(child);
 			mainEl.css({ "position" : 'relative' });
-			
-			console.log("mainEl.width():", mainEl.width());
-			console.log("jWidth:", mainEl.width()+vScrollWidth - paddingLeft - paddingRight);
 
 			childEl.css({
 				"width" : mainEl.width()+vScrollWidth - paddingLeft - paddingRight, 
 				"height" : mainEl.height()+hScrollWidth - paddingTop - paddingBottom 
 			});
 		}
+
+
 		function setVScrollbarWidth(elem) {
 			var el = $(elem);
 			el.css({ "overflow" : 'auto' });
 			vScrollWidth = offsetWidth - clientWidth - borderLeft - borderRight;
 			el.css({ "overflow" : 'hidden' });
+
+			// console.log("j-vScrollWidth:", vScrollWidth);
 		}
 		function setHScrollbarWidth(elem) {
 			var el = $(elem);
 			el.css({ "overflow" : 'auto' });
 			hScrollWidth = offsetHeight - clientHeight - borderTop - borderBottom;
 			el.css({ "overflow" : 'hidden' });
+
+			// console.log("j-hScrollWidth:", hScrollWidth);
 		}
 		function wrap(elem, vscroll, hscroll) {
 			var el = $(elem);
@@ -488,13 +500,6 @@
 			paddingRight = parseInt(el.css('padding-right').replace('px', ''));
 			paddingBottom = parseInt(el.css('padding-bottom').replace('px', ''));
 			paddingLeft = parseInt(el.css('padding-left').replace('px', ''));
-
-			// console.log("---getPadding---",
-			// 			"\npaddingTop:", paddingTop,
-			// 			"\npaddingLeft:", paddingLeft,
-			// 			"\npaddingBottom:", paddingBottom,
-			// 			"\npaddingRight:", paddingRight,
-			// 			"\n---end getPadding---");
 		}
 		function getBorders(elem) {
 			var el = $(elem);
@@ -503,29 +508,24 @@
 			borderRight = parseInt(el.css('border-right-width').replace('px', ''));
 			borderBottom = parseInt(el.css('border-bottom-width').replace('px', ''));
 			borderLeft = parseInt(el.css('border-left-width').replace('px', ''));
-
-			// console.log("---getBorders---",
-			// 			"\nborderTop:", borderTop,
-			// 			"\nborderRight:", borderRight,
-			// 			"\nborderBottom:", borderBottom,
-			// 			"\nborderLeft:", borderLeft,
-			// 			"\n---end getBorders---");
 		}
 		function getDimentions(elem, scroll, update) {
 			var el = $(elem).get(0);
+			
 			if(update) {
 			 el = $(el).find('.lb-wrap').get(0);
 			}
+			
 			scrollHeight = (typeof(scroll) != 'undefined' && scroll != false) ? scroll.height : el.scrollHeight;
-			// console.log("scrollHeight:", scrollHeight);
 
 			scrollWidth = (typeof(scroll) != 'undefined' && scroll != false) ? scroll.width : el.scrollWidth;
-			// console.log("scrollWidth:", scrollWidth);
 
 			clientHeight = el.clientHeight;
 			clientWidth = el.clientWidth;
+
 			offsetHeight = el.offsetHeight;
 			offsetWidth = el.offsetWidth;
+
 			setVScrollbarWidth($(elem));
 			setHScrollbarWidth($(elem));
 		}
