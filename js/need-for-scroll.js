@@ -290,6 +290,48 @@
     }
 
     /*
+     * Remove scrollbars that appear when user overselects the content
+     */
+    function hideScrollbarsAfterSelect() {
+        var par_elem,               // parent element
+            par_dist_el_left,       // distance of parent element from left border of the window
+            par_border_par_left,    // left border of parent element
+            par_dist_el_top,        // distance of parent element from top border of the window
+            par_border_par_top,     // top border of parent element
+
+            elements = document.getElementsByClassName("lb-wrap"), // all main elements
+            element,                // current element
+            dist_el_left,           // distance from left of main element - width of border of parent element
+            dist_el_top,            // distance from top of main element - width of border of parent element
+            dist_diff_hor,          // horizontal difference of offsets of main element and parent element
+            dist_diff_ver;          // horizontal difference of offsets of main element and parent element
+
+        for (var i = 0; i < elements.length; i++) {
+            element                = elements[i];
+            par_elem               = element.parentNode;
+            par_dist_el_left       = par_elem.getBoundingClientRect().left;
+            par_border_par_left    = parseInt(getCssProperty(par_elem, "border-left").replace("px", ""));
+            par_dist_el_top        = par_elem.getBoundingClientRect().top;
+            par_border_par_top     = parseInt(getCssProperty(par_elem, "border-top").replace("px", ""));
+            
+            dist_el_left           = element.getBoundingClientRect().left - par_border_par_left;
+            dist_el_top            = element.getBoundingClientRect().top  - par_border_par_top;
+            dist_diff_hor          = par_dist_el_left - dist_el_left;
+            dist_diff_ver          = par_dist_el_top  - dist_el_top;
+
+            if (dist_diff_hor > 0 || dist_diff_ver > 0) { // If inner div is moved place it in right position and hide scrollbars
+                element.style.position = "fixed"; // force element to repositioning
+                
+                setTimeout(function (element) {
+                    return function() {
+                        element.style.position = "";  // set default position type
+                    }
+                }(element), 0);
+            }
+        }
+    }
+
+    /*
      * Resets all values preparing for next element
      */
     function resetVars() {
@@ -398,6 +440,8 @@
 
     // Set default events
     window.addEventListener("mousemove", function(e) {
+
+
         if (HDragging || VDragging) {
 
             if(VDragging) {
@@ -412,8 +456,9 @@
     }, false);
     // Set default events
     window.addEventListener("mouseup", function(e) {
+        hideScrollbarsAfterSelect();
+        
         if (HDragging || VDragging) {
-
             if (VDragging) {
                 VDragging = false;
             }
@@ -433,15 +478,6 @@
                 var v_scrollbar_height     = parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar")[0], "height").replace("px", "")),
                     v_scrollbar_slider_top = parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar-slider")[0], "top").replace("px", "")) +
                                              parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""));
-
-                // if (v_scrollbar_height == v_scrollbar_slider_top && typeof(options.reachedBottom) == "function" && !vEventFired) {
-                //     vEventFired = true;
-                //     var self = this;
-
-                //     console.log("self:", self);
-
-                //     options.reachedBottom
-                // }
             }, false);
 
             if (addVScroll) {
