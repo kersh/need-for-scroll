@@ -36,8 +36,11 @@
         hEventFired = false;
 
     // Initialization
-    var elements = document.getElementById("box3-new"), // elements for use
-        id = 0,
+    var elements = [document.getElementById("box3-new"),
+                    document.getElementById("box5-new"),
+                    document.getElementById("box2")
+                   ]; // elements for use
+    var id = 0,
         
         vScrollWidth=0,
         hScrollWidth=0,
@@ -99,7 +102,9 @@
      * property - property name
      */
     function getCssProperty(elem, property) {
-        return window.getComputedStyle(elem, null).getPropertyValue(property);
+        if (!!elem) {
+            return window.getComputedStyle(elem, null).getPropertyValue(property);
+        }
     }
 
     /*
@@ -233,18 +238,21 @@
      * Reduce scrollbars width and height
      */
     function reduceScrollbarsWidthHeight(elem) {
+        var elem_v = elem.getElementsByClassName("lb-v-scrollbar")[0],
+            elem_h = elem.getElementsByClassName("lb-h-scrollbar")[0];
+
         if (addVScroll && addHScroll) {
             vLbHeight = parseInt(getCssProperty(elem, "height").replace("px", ""))-12;
             hLbHeight = parseInt(getCssProperty(elem, "width").replace("px", ""))-12;
 
-            elem.getElementsByClassName("lb-v-scrollbar")[0].style.height = vLbHeight + "px";
-            elem.getElementsByClassName("lb-h-scrollbar")[0].style.width  = hLbHeight + "px";
+            elem_v.style.height = vLbHeight + "px";
+            elem_h.style.width  = hLbHeight + "px";
         } else {
             vLbHeight = parseInt(getCssProperty(elem, "height").replace("px", ""))-4;
             hLbHeight = parseInt(getCssProperty(elem, "width").replace("px", ""))-4;
 
-            elem.getElementsByClassName("lb-v-scrollbar")[0].style.height = vLbHeight + "px";
-            elem.getElementsByClassName("lb-h-scrollbar")[0].style.width  = hLbHeight + "px";
+            if (!!elem_v) { elem_v.style.height = vLbHeight + "px"; }
+            if (!!elem_h) { elem_h.style.width  = hLbHeight + "px"; }
         }
     }
 
@@ -254,7 +262,9 @@
     function setSlidersHeight(elem) {
         var hmin, hmax, gap,
             elem_v_scrollbar = elem.getElementsByClassName("lb-v-scrollbar")[0],
-            elem_h_scrollbar = elem.getElementsByClassName("lb-h-scrollbar")[0];
+            elem_h_scrollbar = elem.getElementsByClassName("lb-h-scrollbar")[0],
+            elem_v_slider    = elem.getElementsByClassName("lb-v-scrollbar-slider")[0],
+            elem_h_slider    = elem.getElementsByClassName("lb-h-scrollbar-slider")[0];
 
         if (elem.getElementsByClassName("lb-v-scrollbar").length != 0) {
             hmin = 20;
@@ -274,8 +284,8 @@
             hSliderHeight = (hSliderHeight < hmin) ? hmin : hSliderHeight;
         }
 
-        elem.getElementsByClassName("lb-v-scrollbar-slider")[0].style.height = vSliderHeight + "px";
-        elem.getElementsByClassName("lb-h-scrollbar-slider")[0].style.width  = hSliderHeight + "px";
+        if (!!elem_v_slider) { elem_v_slider.style.height = vSliderHeight + "px"; }
+        if (!!elem_h_slider) { elem_h_slider.style.width  = hSliderHeight + "px"; }
     }
 
     /*
@@ -408,34 +418,34 @@
      * Main loop...
      */
     function mainLoop() {
+        for (var i=0; elements[i] !== undefined; i++) {
+            if (needScrollbars(elements[i]) && !hasClass(elements[i], "no-needforscroll")) {
+                // Get element from array
+                target = elements[i];
 
-        if (needScrollbars(elements) && !hasClass(elements, "no-needforscroll")) {
+                // Get some values before the element is wrapped
+                getDimentions(target);
 
-            // Get element from array
-            target = elements;
+                // Wrap the element with scrollbars
+                wrap(target, addVScroll, addHScroll);
 
-            // Get some values before the element is wrapped
-            getDimentions(target);
+                // Hide default scrollbar
+                hideScrollbars(target, addVScroll, addHScroll);
 
-            // Wrap the element with scrollbars
-            wrap(target, addVScroll, addHScroll);
+                // Calculate the size of the scrollbars
+                reduceScrollbarsWidthHeight(target);
+                setSlidersHeight(target);
 
-            // Hide default scrollbar
-            hideScrollbars(target, addVScroll, addHScroll);
+                // Set variables needed to calculate scroll speed, etc.
+                setScrollRatios(target);
 
-            // Calculate the size of the scrollbars
-            reduceScrollbarsWidthHeight(target);
-            setSlidersHeight(target);
+                // Set events
+                setEvents(target);
 
-            // Set variables needed to calculate scroll speed, etc.
-            setScrollRatios(target);
-
-            // Set events
-            setEvents(target);
-
-            // Prepare for next element
-            resetVars();
-        }
+                // Prepare for next element
+                resetVars();
+            } // end if
+        } // end loop
     }
 
     // Set default events
@@ -471,22 +481,28 @@
     // Core
     function setEvents(elem) {
         if (addVScroll || addHScroll) {
-            elem.getElementsByClassName("lb-wrap")[0].addEventListener("scroll", function(e) {
-                elem.getElementsByClassName("lb-v-scrollbar-slider")[0].style.top  = -this.scrollTop /elem.getAttribute("vratio")+"px";
-                elem.getElementsByClassName("lb-h-scrollbar-slider")[0].style.left = -this.scrollLeft/elem.getAttribute("hratio")+"px";
+            var elem_v_slider = elem.getElementsByClassName("lb-v-scrollbar-slider")[0],
+                elem_h_slider = elem.getElementsByClassName("lb-h-scrollbar-slider")[0],
+                elem_lb_wrap  = elem.getElementsByClassName("lb-wrap")[0];
 
-                var v_scrollbar_height     = parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar")[0], "height").replace("px", "")),
-                    v_scrollbar_slider_top = parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar-slider")[0], "top").replace("px", "")) +
-                                             parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""));
+
+            elem_lb_wrap.addEventListener("scroll", function(e) {
+                if (!!elem_v_slider) { elem_v_slider.style.top  = -this.scrollTop /elem.getAttribute("vratio")+"px"; }
+                if (!!elem_h_slider) { elem_h_slider.style.left = -this.scrollLeft/elem.getAttribute("hratio")+"px"; }
+
+                // TODO: Finish load on scroll
+                // var v_scrollbar_height     = parseInt(getCssProperty(elem.getElementsByClassName("lb-v-scrollbar")[0], "height").replace("px", "")),
+                //     v_scrollbar_slider_top = parseInt(getCssProperty(elem_v_slider, "top").replace("px", "")) +
+                //                              parseInt(getCssProperty(elem_v_slider, "height").replace("px", ""));
             }, false);
 
             if (addVScroll) {
-                elem.getElementsByClassName("lb-v-scrollbar-slider")[0].onmousedown = function(e){
+                elem_v_slider.onmousedown = function(e){
                     eventY       = e.pageY;
                     VDragging    = true;
                     activeScroll = this;
 
-                    activeWrap   = elem.getElementsByClassName("lb-wrap")[0];
+                    activeWrap   = elem_lb_wrap;
                     currentRatio = activeWrap.parentNode.getAttribute("vratio");
                     initPos      = parseInt(getCssProperty(activeScroll, "top").replace("px", ""));
                     return false;
@@ -495,19 +511,19 @@
                 elem.getElementsByClassName("lb-v-scrollbar")[0].onmousedown = function(e){
                     if (!hasClass(e.target, "lb-v-scrollbar-slider")) {
                         var this_offset_top = this.getBoundingClientRect().top + window.pageYOffset;
-                        elem.getElementsByClassName("lb-wrap")[0].scrollTop = (e.pageY - this_offset_top) * Math.abs(elem.getAttribute("vratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""))/2;
+                        elem_lb_wrap.scrollTop = (e.pageY - this_offset_top) * Math.abs(elem.getAttribute("vratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-v-scrollbar-slider")[0], "height").replace("px", ""))/2;
                     }
                     return false;
                 }
             }
 
             if (addHScroll) {
-                elem.getElementsByClassName("lb-h-scrollbar-slider")[0].onmousedown = function(e){
+                elem_h_slider.onmousedown = function(e){
                     eventX       = e.pageX;
                     HDragging    = true;
                     activeScroll = this;
 
-                    activeWrap   = elem.getElementsByClassName("lb-wrap")[0];
+                    activeWrap   = elem_lb_wrap;
                     currentRatio = activeWrap.parentNode.getAttribute("hratio");
                     initPos      = parseInt(getCssProperty(activeScroll, "left").replace("px", ""));
                     return false;
@@ -516,7 +532,7 @@
                 elem.getElementsByClassName("lb-h-scrollbar")[0].onmousedown = function(e){
                     if (!hasClass(e.target, "lb-h-scrollbar-slider")) {
                         var this_offset_left = this.getBoundingClientRect().left + window.pageXOffset;
-                        elem.getElementsByClassName("lb-wrap")[0].scrollLeft = (e.pageX - this_offset_left) * Math.abs(elem.getAttribute("hratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-h-scrollbar-slider")[0], "width").replace("px", ""))/2;
+                        elem_lb_wrap.scrollLeft = (e.pageX - this_offset_left) * Math.abs(elem.getAttribute("hratio")) - parseInt(getCssProperty(this.getElementsByClassName("lb-h-scrollbar-slider")[0], "width").replace("px", ""))/2;
                     }
                     return false;
                 }
